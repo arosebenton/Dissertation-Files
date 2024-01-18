@@ -7,8 +7,6 @@ This project seeks to understand the impact of environmental marginalization on 
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Usage](#usage)
 - [Project Structure](#project-structure)
 - [Acknowledgements](#acknowledgements)
 - [Contact](#contact)
@@ -18,33 +16,6 @@ This project seeks to understand the impact of environmental marginalization on 
 1. Clone the repository.
 2. Install dependencies: `npm install`
 3. Run the project: `npm start`
-
-## Usage
-
-To use this project, follow these steps:
-
-1. Include the necessary assets and helper functions
-   - Bibliography files are located in the `assets` folder.
-   - Custom helper functions by [A. Jordan Nafa](https://github.com/ajnafa) in the `assets/helpers` folder.
-
-2. Access the data for each chapter in the `data` folder.
-   - Data for Chapter 1: `data/chapter1`
-   - Data for Chapter 2: `data/chapter2`
-   - Data for Chapter 3: `data/chapter3`
-
-3. Explore manuscripts in the `manuscripts` folder.
-   - Versions of the paper: `manuscripts/old_versions`
-   - Poster versions: `manuscripts/poster`
-   - Files used for creation Quarto Markdown: `manuscripts/markdown`
-   - Files used for cration in MS Word: `manuscripts/ms-word`
-
-4. Review project outputs in the `output` folder.
-   - Figures: `output/figures`
-   - Fits: `output/fits`
-   - Predictions: `output/predictions`
-   - Tables: `output/tables`
-
-5. Reproduce the analysis using R scripts in the `scripts` folder.
 
 ## Project Structure
 
