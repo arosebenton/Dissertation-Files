@@ -11,12 +11,6 @@ This project seeks to understand the impact of environmental marginalization on 
 - [Acknowledgements](#acknowledgements)
 - [Contact](#contact)
 
-## Installation
-
-1. Clone the repository.
-2. Install dependencies: `npm install`
-3. Run the project: `npm start`
-
 ## Project Structure
 
 project-root
