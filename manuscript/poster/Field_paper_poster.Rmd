@@ -1,0 +1,100 @@
+---
+title: Racial Identity in a Changing World
+author:
+  - name: Rose Benton
+affiliation:
+    address: Department of Political Science, University of North Texas
+column_numbers: 3
+primary_colour: '#00853e'
+secondary_colour: '#fffff'
+output: 
+  posterdown::posterdown_html:
+    pandoc_args: --mathjax
+    highlight: haddock
+    number_sections: false
+
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+```{r, echo=FALSE, fig.height=5, out.width="100%", fig.align='center'}
+knitr::include_graphics('C:/Users/arb0365/OneDrive - UNT System/Projects/Field_paper/output/figures/npl_map.jpg')
+```
+
+# Introduction
+
+Environmental degradation is inherently marginalizing (Nagel 2012). A growing body of evidence shows that people of color are more likely to live in areas that experience environmental degradation, are less likely to receive help with remediation and natural disaster relief, and what help they do receive is often condemned rhetorically by politicians and media. Despite a large body of literature denoting the importance of political identity on climate politics, little research examines the causal arrow in the opposite direction. I argue that the experience of local environmental degradation can impact the salience of group positionality in the larger political environment . Through use of a novel measure of environmental degradation (proximity to EPA Superfund National Priority List sites), this study investigates degradation impacts on racialized group dynamics in the United States. 
+
+# Theory
+
+The racial and ethnic politics literature shows that the strength of racial identity in the United States is closely linked to the way that a given racial group is treated by the broader society, but especially by the government (Dawson 1994; Junn 2007; etc). Environmental racism is an increasingly salient issue, and as such I assume that respondents who are aware that they live in highly degraded areas would have some level of knowledge about it and likely higher levels of linked fate, or the understanding that race impacts the way that one is treated by society. However, if the government intervenes in environmental marginalization I expect linked-fate to be moderated under high visibility conditions because such actions indicate fair treatment of the marginalized group.In low visibility conditions (e.g. when citizens are unaware of the initial degradation), the presence of a site will likely lead instead to increased linked fate, due to the site being the first evidence of environmental degradation.
+
+Effectively, this is a test of whether NPL Superfund sites are seen as evidence of environmental racism or as evidence of government assistance in fighting it.
+
+```{r, echo=FALSE, fig.height=5, out.width="75%", fig.align='center'}
+knitr::include_graphics('C:/Users/arb0365/OneDrive - UNT System/Projects/Field_paper/output/figures/canva_theory.png')
+```
+
+# Data
+
+Dependent Variable: Linked Fate (ANES 2016:2020)
+
+* “How much do you think that what happens generally to [racial group] people in this country will affect what happens in your life?”
+
+* Adjusted so that “Not a lot” (0), “Some” (1), and “A lot” (2)
+
+Independent Variable: EPA National Priorities List Superfund Sites
+
+* In District: Respondent has a site in their legislative district.
+
+* Proximity: Log mean distance (km) to all NPL sites in respondent's State. (Respondents' locations reported as center-point of legislative district, lowest available level)
+
+Controls
+* Race, Sex, Level of Education, Income, Age, Party
+
+# Method
+
+This is a Bayesian Multilevel Multinomial Logit model with an explicit nesting structure which places respondents within legislative districts within states. In other words, this is a Multinomial mixed effects model. I estimate the model via the probabilistic programming language Stan which implements the No-U-Turn sampler variant of Hamiltonian Markov Chain Monte Carlo (Carpenter et al. 2017; Hoffman and Gelman 2014). 6 Markov chains ran in parallel for 5,000 iterations each, the first 3,000 iterations for each chain are discarded after the initial warm-up adaptation stage leaving us with 12,000 posterior samples for subsequent analysis. 
+
+
+# Results
+ 
+I find that proximity to EPA Superfund sites does impact linked fate. The analysis supports the high visibility model (which makes sense, as climate politics were highly salient during the time period in question (Fielding & Hornsey 2016)), indicating that as respondents get farther away from NPL sites over time, they are likely to have a higher level of linked fate. Put a bit more clearly, those who live closer to NPL sites in 2020 than in 2016 had lower levels of linked fate. 
+
+```{r, echo=FALSE, fig.height=5, out.width="75%", fig.align='center'}
+knitr::include_graphics('C:/Users/arb0365/OneDrive - UNT System/Projects/Field_paper/output/predictions/ame_plot_mod_2.jpg')
+```
+
+
+*** A note on interpretation: Figure 4 presents Bayesian 95% credible intervals. Rather than showing point estimates for a given parameter (like frequentist confidence intervals do), credible intervals present the predicted population distribution given the results of the model.
+
+# Next Steps
+
+Future iterations of this project will seek to understand the racial identity impacts of sites who were denied funding. 
+My theory predicts that under these circumstances linked fate should either increase drastically (under the high visibilty model)
+or stay stagnant (under the low visibility model). This analysis is important due to the relatively low number of approved superfund sites compared to the abundance of degraded environments in the United States; if there is a racial bias in the selection process
+local citizens may recognize it as environmental racism and as such have higher levels of linked fate. This data is currently being
+collected and cleaned for future analysis. 
+
+
+# References
+
+Dawson, M.C., 1994. Behind the mule. Princeton University Press.
+
+Fielding, Kelly S., and Matthew J. Hornsey. 2016. "A social identity analysis of climate change and 
+   environmental attitudes and behaviors: Insights and opportunities." Frontiers in psychology 7: 121.
+
+Junn, J., 2007. FROM COOLIE TO MODEL MINORITY: US Immigration Policy and the Construction of 
+   Racial Identity1. Du Bois review: Social science research on race, 4(2), pp.355-373.
+   
+Nagel, J. 2012. Intersecting identities and global climate change. Identities, 19(4), 467-476.
+
+Nixon, R., 2013. Slow Violence and the Environmentalism of the Poor. Cambridge, MA: Harvard University Press.
+
+
+
+

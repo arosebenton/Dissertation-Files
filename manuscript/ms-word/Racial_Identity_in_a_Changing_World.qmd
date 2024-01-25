@@ -1,0 +1,728 @@
+---
+title: "Racial Identity in a Changing World: The Impacts of Environmental Degradation on Linked Fate"
+abstract: "Environmental degradation is an inherently marginalizing experience. A growing body of evidence shows that people of color are more likely to live in areas that experience environmental degradation, are less likely to receive help with remediation and natural disaster relief, and what help they do receive is often condemned rhetorically by politicians and media. Despite a large body of literature denoting the importance of political identity on climate politics, little research examines the causal arrow in the opposite direction. I argue that the experience of local environmental degradation can impact the salience of group positionality in the larger political environment. That environmental degradation and other factors related to climate change are disproportionately felt by the marginalized is not a secret. Just as feelings of alienation due to immigration status make it easier for an individual to feel that their fate is intertwined with that of others in their racial or ethnic group, so too should situations such as pollution, lack of access to clean water, and poorer health outcomes when these events impact groups along racial and ethnic lines. Through use of a novel measure of environmental degradation (proximity to EPA Superfund National Priority List sites), this study investigates degradation impacts on racialized group dynamics in the United States."
+author:
+  - "*A. Rose Benton*"
+  - "University of North Texas"
+format: 
+  docx:
+    toc: false
+    reference-doc: "../../assets/Manuscript_Template.docx"
+    linkcolor: "#00853E"
+    csl: "../../assets/apsa.csl"
+fontsize: 12pt
+bibliography: "../../assets/references.bib"
+tbl-cap-location: top
+linkcolor: "#00853E"
+crossref: 
+  tbl-prefix: ""
+  fig-prefix: ""
+  eq-prefix: ""
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  cache = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  echo = FALSE,
+  comment = ' ',
+  fig.align = "center",
+  cache.path = '_cache/',
+  fig.process = function(x) {
+    x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
+    if (file.rename(x, x2))
+      x2
+    else
+      x
+  }
+)
+
+# Load the required libraries
+pacman::p_load(
+  "tidyverse",
+  "arrow",
+  "ggdist",
+  "kableExtra",
+  "patchwork",
+  install = FALSE
+)
+
+
+# Load the helper functions
+.helpers <- lapply(
+  list.files(
+    path = "../../functions/", 
+    pattern = ".*R", 
+    full.names = TRUE
+    ), 
+  source
+  )
+```
+
+::: {custom-style="keywords"}
+Keywords: *Environmental Degradation, Climate Politics, Racial and
+Ethnic Politics, Linked Fate*
+:::
+
+::: {custom-style="First Paragraph"}
+It is imperative that political science reaches a more thorough
+understanding of the impact that humans have had on the global
+environment and the inevitable impacts that it will in turn have on
+political behavior [@Roston2010]. Much literature has focused on the
+impact of demographic information such as race, gender and sexuality on
+belief in climate change, however little is known about the ways which
+experience with related phenomena like pollution and other types of
+environmental degradation might impact those same identities. This
+research seeks to bridge that gap.
+:::
+
+While anthropogenic climate change and environmental degradation are
+existential threats to all humans and most geographic regions have been
+degraded in a variety of ways, marginalized groups are the most
+vulnerable due to issues of systemic inequality in political, economic,
+and social contexts[@Nagel_2012]. Thus, an important question in
+understanding this issue is its impact on the political behavior of
+marginalized groups. I argue that when marginalized people experience
+the externalities of a changing climate, such as increasing pollution,
+land degradation, or natural disasters, the salience of their relative
+group positionality in the larger political environment should become
+more important to them through a stronger sense of racial linked fate.
+Perceptions of power disparities and systemic injustice surround
+environmentalist discourse in the broader political sphere, and so it
+logically follows that the degradation of local ecosystems may trigger
+the salience of racial identity. The following discussion will focus on
+a few groups of literature: first, I will detail the ways in which the
+effects of climate change and environmental degradation are dispersed
+socially and demographically; then I will discuss patterns of research
+in climate politics[^1] and where this theorization fits in context;
+next I will illustrate the intertwined nature of identity and the
+environment; then we will move on to a discussion of group consciousness
+and linked fate as models of understanding racialized political behavior
+in the United States; before pulling these disparate literatures into a
+fleshed out theory of local environmental degradation and racial linked
+fate.
+
+[^1]: This implies a non-centered parameterization for the random
+    effects which aids in the convergence of more complex hierarchical
+    models [@McElreath2020, 446-471].
+
+# Environmental Effects and Their Distribution
+
+Environmental degradation is defined in varying ways, from very specific
+definitions such as that of Li and Reuveny [-@LI_2006] which relies on
+the presence and level of 5 indicators (carbon dioxide emissions,
+nitrogen dioxide emissions, deforestation, land degradation, and organic
+pollution in water) to more general and expansive definitions which
+instead point to "a deterioration in environmental quality from ambient
+concentrations of pollutants and other activities and processes such as
+improper land use and natural disasters" [@OECD]. This paper will follow
+the later definition and discuss environmental degradation as a broad
+concept, understanding that this is a granular phenomena at best, which
+adapts and takes new forma in new contexts. Part of the reason for this
+is that climate change and environmental degradation are so
+intrinsically linked. Climate change can drive land degradation and land
+degradation makes the effects of climate change more impactful
+[@Talukder_2021]. Is flooding more the fault of climate change for
+changing the sea level or the degraded land that is missing its natural
+protections from floods (such as plant cover, sand dunes, etc) because
+of human interference? The answer is both; however, for the purposes of
+doing science it is often easier to measure the direct impact of
+environmental degradation on humans.
+
+The main consequences that the United States will see from a changing
+environment include both cyclical and permanent flooding of large
+portions of the country, drought and water scarcity, crop failure, and
+increased incidence and severity of natural disasters such as hurricanes
+and wildfires [@EPA_a; @Blankenship_2020]. Past the obvious risk of loss
+of life and property damage, these effects are likely to drive migration
+events, increase incidences of aggression, interpersonal violence and
+crime, and to lessen the ability of national and state governments to
+enforce rule of law [@Michael_1983; @Anderson_2000; @Tierney_2006;
+@Stock_2007; @Piguet2011; @McLeman_2018]. These effects have the
+potential for significant impact to political behavior, however it is
+not the case that all people will experience the same type or level of
+impact. Those who live in marginal areas will be impacted much more than
+those who have the political clout to prevent pollution close to their
+homes and workplaces (this is often called NIMBYism, meaning Not In My
+Back Yard ism), the money to invest in mitigation measures, and better
+access to relief measures after effects have started to be felt
+[@Nagel_2012; @Muro2022; @Hill_1965; @Kramar_2018]. It follows then that
+we should expect a range of outcomes when looking at how different
+groups respond to degradation.
+
+There are two angles by which we can understand the distribution of
+human caused environmental changes: social and geopolitical. That is,
+structural inequality has made it so that those with the least political
+power are the most likely to bear the brunt of climate change and its
+externalities, while the geographic component of the issue indicates
+that certain regions and topographies will be more impacted more than
+others [@Nagel_2012; @Muro2022; @Hill_1965; @Tomaskovic_Devey_1997;
+@O_Connell_2012].
+
+A growing body of evidence has shown that people of color are more
+likely to live in areas that experience adverse outcomes from
+environmental degradation such as drought and wildfire, are more likely
+to experience pollution due to proximity to industrial areas, are less
+likely to receive help from their leaders after natural disasters have
+occurred, and what help they do receive is often condemned rhetorically
+by politicians and media [@Nagel_2012; @Nixon2011; @Soyapi_2016]. This
+is not surprising, because the similar arguments can be made about other
+expressions of institutional violence, such as biased prison or
+immigration systems. Due to this pattern, if the political behavior of
+any group has been impacted by the environment it should be more obvious
+in groups who are marginalized. Climate change cannot be fully
+understood through the lens of the natural sciences because at a
+fundamental level its impacts are tied to overarching structural
+patterns of inequality and thus requires a wide body of
+interdisciplinary research to be described properly.
+
+# Climate Politics and Political Science
+
+The study of climate change politics in Political Science, especially in
+the American context, has been primarily focused on descriptive works
+which detail the influence of identity on belief in or concern for
+climate change, and on the individual, public opinion and electoral
+outcomes brought on by various environmental factors [@Johnson_2005;
+@Capstick_2014; @Achen2016; @Egan_2017; @Fielding_2016;
+@Blankenship_2020; @Bechtel_2021; @Harth_2021; @Mackay_2021]. Natural
+disasters and high temperatures in particular have been linked to
+decreased government legitimacy, more critical appraisal of climate
+mitigation measures taken by executives, voter turnout, and vote choice
+[@Gomez_2007; @Healy2009; @Gasper_2011; @Carlin_2013;
+@Blankenship_2020]. At an individual level, these variables are known to
+heighten feelings of aggression and competition and to increase support
+for expensive policy measures, hinting at an increasing level of risk
+acceptance in respondents [@Anderson_2000; @Hazlett_2019].
+
+The largest body of climate politics literature by far is that which
+describes the impact of demographic variables on belief in or concern
+for climate change; the two variables are highly correlated in American
+public opinion, so I will use the concepts interchangeably [@Egan_2017].
+As an issue which has been subject to heightened levels of
+politicization and polarization over recent decades, it is not
+surprising that political party and ideology are the strongest
+predictors of climate concern[@McCright_2011; @Egan_2017]. Closely
+following these are age, gender, and (more importantly for our purposes)
+race, and socioeconomic status. As I will discuss in the next section,
+the effects of climate change and environmental degradation are
+disproportionately felt by marginalized racial groups, women, and those
+of low socioeconomic status. This link between marginalization, climate
+concern, and climate vulnerability serves as the foundation of this
+theory of the environmental determinants of minority political behavior.
+
+A tangential but possibly mitigating factor on the effect of the
+environment on political behavior is issue salience. While this is a
+highly polarized and highly politicized issue, it is also seen as a low
+salience one with respondents regularly ranking it as one of the least
+important issues on the public agenda, and it might even have decreased
+in recent years [@Egan_2017; @Spisak_2022]. There is some hope for
+younger generations, however the general public mood in America is that
+climate change is something to fight over and have strong opinions
+about, not something to take action over [@Egan_2017; @Tyson2021]. This
+might indicate that even though certain groups are heavily impacted by
+environmental factors they prioritize other issues. Nonetheless I argue
+that climate impacts could be a spark that incentivizes a change in
+feelings of racial identity by making plain the relative inequality
+inherent in climate change. Although climate change is not one of
+Americans' most salient issues, it may bring another issue into
+heightened relief: identity politics. What is largely missing from the
+literature is an in-depth analysis of the impacts of climate change and
+environmental degradation on group behavior.
+
+# Group Consciousness and Linked Fate
+
+In this section, I narrow the conversation from a discussion of the
+impact of environmental factors on broader political behavior to the
+more specific question of its impacts on racial identity formation and
+linked fate. As the above discussion shows, power politics and relative
+group positionality are the main obstacles in the way of a more
+equitable experience of climate change. A common way to overcome power
+disparities throughout the world is racial and ethnic mobilization, a
+mechanism by which groups of individuals with similar political
+interests coalesce in order to combine their electoral and social power
+[@Leighley2001a; @Fearon_2009; @Vermeersch2012]. Nagel [-@Nagel1997, 23]
+argues that racial mobilization is a product of individuals partaking in
+a "continuous assessment of situation and audience, emphasizing or
+deemphasizing particular dimensions of ethnicity according to some
+measure of utility or feasibility". As such, it is logical to
+investigate the ways in which climate impacts racial identity formation
+in particular.
+
+One of the main frames of reference in which American politics
+understands race is through group consciousness and linked fate. These
+concepts build upon an understanding of race, not as an intrinsic,
+primordial facet of humanity, but rather as something socially
+constructed as a means of othering groups with various phenotypic
+attributes. Omi and Winant [-@Omi2014a] discuss the formation of racial
+identities through a historical framework, explaining how the importance
+of identity politics and a history of White political strategies which
+explicitly opposed the success of non-White groups has led to a
+consistent power struggle in American politics. Because race impacts the
+ways in which an individual experiences politics, it can also condition
+the attitudes and behaviors that they adopt within political society.
+Group consciousness is an understanding of one's identity in the context
+of the relative group power disparities brought about by the racially
+hierarchical nature of American society [@Omi2014a]. Linked fate, a
+concept originally used to describe the impact of chattel slavery on
+Black group consciousness, takes this one step further and articulates
+an assumption that whatever happens to one person within a group will
+impact the outcome of others and that what happens to the group will
+influence the fate of individuals [@Dawson1995]. Dawson developed this
+concept through reference to his Black Utility Heuristic, which
+theorizes that their shared history has made race such an important
+factor for Black Americans that their individual political behavior is
+best understood when taking into account their relationship to the
+group. This is the basis of the study of race and ethnicity by scholars
+of American politics.
+
+Two major developments in the theory of linked fate are relevant here.
+First, works such as Sanchez and Masuoka [-@Sanchez2010] and Junn and
+Masuoka [-@Junn2007] expand the idea of linked fate to other minority
+groups and describe the potential for malleability in linked fate. Not
+every Latino feels as if the political outcomes of Latinos as a group
+will affect them, the importance of their racial identity can condition
+the way in which that identity shapes their political attitudes and
+behavior. The theoretically relevant mechanism here is marginalization,
+because when groups who are excluded from society share experiences such
+as systemic poverty, xenophobic public opinion, the impacts of
+immigration on economic and social mobility, and possibly the
+disproportionate allocation of climate change effects, they are more
+likely to develop their group consciousness into a feeling of linked
+fate due to frequent reminders of relative group positionality
+[@Sanchez2010].
+
+Second, further research made clear that the role of government policy
+can be influential in the formation of racial identity. Junn
+[-@Junn2007] discusses the ways in which decisions by the federal
+government about which immigrants deemed acceptable and the ways in
+which those decisions have changed over time has influenced the changing
+racialized stereotypes for Asian Americans over time. Further, Silva et.
+al [-@Silva_2020] show that less institutionalized government policies,
+such as local police performance, can be racialized experiences that
+shape public opinion along group-based lines. I would argue that climate
+mitigation policies are experiences that trigger the salience of
+relative group positionality because they operate as threats to group
+security.
+
+Security threats are a well known predictor of ethnic identity hardening
+in comparative politics because they allow for the politicization of
+group dynamics. By creating a group of insiders to which outside groups
+are held up as strange and other, they begin to construct an identity
+around this dynamic [@Lake1996]. This identity is malleable and changes
+drastically over time as different factors raise the political salience
+of ethnic identity and groups adapt to meet new challenges [@Barth1969;
+@Weber1978; @Eller_1993; @Jesse2011 ] . Identity becomes instrumental as
+elites within the community start to wield ethnicity as a political tool
+with which to outbid each other, but can also be a symptom of
+modernization and interaction with a more diverse, densely populated
+city environment or some other change or shock to the standing context
+of identity politics [@Bell1975; @Brass1996; @Jesse2011]. The key here
+is that identity is context dependent and adaptive, indicating that
+major shocks like environmental change should precipitate some sort of
+change in the strength of political identity.
+
+That environmental degradation and other factors related to climate
+change are disproportionately felt by the marginalized is not a secret.
+Just as feelings of alienation due to immigration status make it easier
+for an individual to feel that their fate is intertwined with that of
+others in their racial or ethnic group, so too should situations of
+disproportionate allocation of pollution and other types of
+environmental degradation when these events impact them along racial and
+ethnic lines.
+
+::: {custom-style="Hypothesis"}
+*Hypothesis 1 (H~1~)*: The reported levels of linked fate for minority
+respondents will be impacted by their experience of degraded local
+environments.
+:::
+
+In practical terms, I can see two plausible pathways for this
+relationship, which I will term the low visibility model and the high
+visibility model. Under the low visibility model the community in
+question does not recognize when the local environment has been degraded
+and as such their levels of linked fate are not impacted. However, some
+actor (such as the state government, an individual who does not
+broadcast their actions to the larger community, etc.) contacts the EPA
+and begins the decision process to name the contamination zone an EPA
+Superfund site. Once that process concludes the site will either be
+approved or denied. If the site is denied in the low visibility model, I
+expect no change in reported levels of linked fate. The people living
+near the site did not notice the instigating degradation event and a
+denied site does not receive the visibility boost that an approved one
+has, so they would continue to live their lives as usual. In the
+counterfactual in which the same site was approved by the EPA and thus
+received the accompanying signage, fences, and other visible indicators
+that some pollutant exists in the area, I expect linked fate would
+increase. Respondents who were previously unaware of the site would not
+necessarily see site approval as a relief from concerns brought to the
+government, because they were not aware that a problem existed in the
+first place. However, community members who are naive to the impact of
+environmental degradation in their local area who suddenly come upon an
+EPA Superfund site would likely be shocked and have cause to contemplate
+how and why the degradation happened in the first place. Thus, the only
+way for linked fate to go is up.
+
+![](images/canva_theory.png)
+
+Under the high visibility model, I expect that an approved site will
+lower levels of linked fate for a similar reason. A community who has
+brought concerns about local environmental degradation to the federal
+government and then sees action from the EPA, in the form of site
+approval, has had their concerns addressed. Linked fate is in many ways
+an expression of the way a respondent sees the way they are treated by
+the government. If the government is responsive, linked fate should
+decrease. Finally, a denied Superfund site should increase linked fate.
+A community has expressed distress about environmental degradation and
+has been ignored, which would likely drive perceptions of adverse
+treatment by the government. The data currently available for this
+analysis include only approved sites, so this analysis will look only at
+(1) if change in proximity to approved sites over time impacts at all,
+and (2) which direction that change is in [^2].
+
+[^2]: Centroids and proximity are calculated via the sf package in R
+    (Pebesma et al 2022).
+
+# Data and Operationalization
+
+## Dependent Variable
+
+The outcome of interest in this study, *linked fate*, is operationalized
+as a question from the 2016 and 2020 waves of the American National
+Elections Survey. The questions ask each racial group (Black, Hispanic,
+and Asian) "How much do you think that what happens generally to
+\[racial group\] people in this country will affect what happens in your
+life?" The ordinal factor is restructured so that it increases as the
+level of linked fate increases: "Not at all" (0), "Not very much" (1),
+"Some" (2), and "A lot" (3). The location for the 2,317 observations is
+coded as the geographic center point for their legislative district.
+This is the lowest geographic level available for the respondents.
+
+## Independent Variables
+
+The main predictor in this analysis is proximity to EPA Superfund
+National Priorities List Sites. This is a program established by the
+Comprehensive Environmental Response, Compensation, and Liability Act of
+1980 (CERCLA), generally referred to as the EPA "Superfund"
+program/project. This is a novel predictor as of yet in political
+science as far as I can tell, but I would argue that it is more
+appropriate here than the commonly used measures (generally the levels
+of one or more specific pollutants in the air or water) because measures
+of any given pollutant are hardly a holistic measure of the entire local
+system. Knowing the levels of ozone in an area might be helpful in
+certain questions, but on their own their use in this study would not
+give us a good picture of the conditions that respondents live with due
+to long term challenges in the quality and reach of information about
+local pollutants[@Ramirez2019] and the generally low level of issue
+salience associated with climate topics [@Egan_2017; @Spisak_2022].
+
+By measuring proximity to a source of environmental degradation, we can
+more clearly connect the issue with a respondents daily life and, more
+importantly, Superfund sites are extremely visible as can be explained
+best through a narrative of the process each site (ideally) will go
+through. The life cycle of an EPA NPL listed site begins when a
+community realizes that there has been some event which has caused the
+area to be degraded, usually through pollution by some contaminant. The
+site is brought to the attention of the EPA and is given a preliminary
+assessment inspection, where an employee of the EPA surveys the site and
+determines if the report is viable for continued investigation. Then, a
+more detailed assessment leads to a review process during which a site
+is approved if it meets one or more of the following requirements:
+
+● A score of 28.50 or higher on the Hazard Ranking System (HRS); a
+scoring instrument used by the EPA to quantify information collected
+during the various inspection phases.
+
+● EPA determination that the site is a significant threat to public
+health
+
+● EPA determination that remediation (an authority limited to NPL sites)
+will be more cost-effective than emergency removal (a more accessible
+tactic)
+
+● Top Priority designation by a State or Territory government
+
+● Recommendation by the Agency for Toxic Substances and Disease Registry
+(a sister agency also established by the CERCLA/Superfund legislation)
+
+The key part of this process to its viability as a variable in this
+analysis is community recognition of the site. Since their recognition
+of the site is necessary for it to be noticed by the EPA, and due to the
+visibility of established sites (see Appendix 1), we can assume that
+most respondents would recognize that they live near or directly in a
+contaminated area.
+
+![](npl_map.jpg){fig-align="center"}
+
+NPL proximity is measured in two ways. I utilize the lowest level of
+geocoding available for ANES respondents, legislative districts, to
+narrow down their location. I take the geographic center points of each
+district and calculate the distance to all NPL sites in the
+corresponding state [^3]. The measure *proximity* is the mean distance
+for that respondent, which has been logged to account for skewness.
+Second, *In District* is a simple dichotomous variable indicating if
+there are any sites in that legislative district. Finally, I include a
+control for the average *HRS score* for all sites within the state in
+order to account for the impact that site severity might have on
+perceptions of pollution in the area.
+
+[^3]: Centroids and proximity are calculated via the sf package in R
+    (Pebesma et al 2022).
+
+![](images/prox_dist.jpg)
+
+I also include additional respondent-level demographic predictors from
+the ANES which might influence survey sampling. *Age* is a 7
+level-factor ranging from "18-24" to "65+"; *female* is a dichotomous
+measure of gender with male as the reference category; and *race* is a 3
+level nominal factor with the levels "Asian American", "Black or African
+American", and "Hispanic or Latino", which are the only groups that are
+targeted for this question. Finally, I include a control for which
+*census region* the respondent lives in, under the assumption that the
+context of racial identity varies across region meaning that states,
+say, in the South are not comparable to those in the West, Midwest, or
+Northeast, and a dichotomous measure of *time,* indicating which wave of
+the ANES the observation is from. Descriptive statistics for all of the
+variables in the model can be found in Appendix 3.
+
+# Method
+
+To evaluate the theoretical expectations outlined in the preceding
+section, I estimate a series of Bayesian hierarchical categorical logit
+models. In the context of the observed data in which respondents
+$i \in \{1,2,\dots,N\}$ are nested within congressional districts
+$j \in \{1,2,\dots,J\}$ which are in turn nested within states
+$s \in \{1,2,\dots,S\}$, the model can be expressed as a set of
+equations representing each level.
+
+$$
+\begin{align}\
+y_{ijs} &\sim \mathrm{Categorical}(\theta_{k})\\
+\mathrm{logit}(\theta_{k}) &= \alpha_{js,k} + \beta_{1s,k}\mathrm{Time}_{k} + \beta_{2,k}x_{2,k} + \dots + \beta_{l,k}x_{l,k}\
+\end{align}
+$$ {#eq-population-level}
+
+::: a
+Equation @eq-population-level represents the population-level effects,
+where the relative probability of the response $\theta_{k}$ for each
+category $k \in \{1,\dots,K\}$ is a function of a global intercept
+$\alpha$, a set of $L$ fixed coefficients $\beta_{l}$ which capture
+respondent-level demographic characteristics, a dichotomous indicator
+for survey wave that takes value of 0 for the 2016 ANES wave and 1 for
+the 2020 wave, and an interaction between time and average log proximity
+to an EPA Superfund site from the center point of a respondent's
+congressional district, and a control for the average severity of those
+sites. The varying intercepts, denoted $\alpha_{j,k}$ and $\alpha_{s,k}$
+capture congressional district and state specific deviations from the
+global average for the $k^{th}$ category respectively.
+:::
+
+$$
+\begin{aligned}
+\alpha_{j[s],k} &\sim \mathcal{MVN}(\gamma_{10} + \gamma_{11}z_{11} + \dots + \gamma_{14}z_{14}, ~ \sigma_{\alpha_{j[s],k}})\\
+\end{aligned}
+$$ {#eq-district-level}
+
+::: a
+At the congressional district level shown in equation
+@eq-district-level, the district-by-state intercepts for each category
+$k$ follow a multivariate normal distribution whose mean is a linear
+combination of the overall average within congressional districts
+$\gamma_{10}$ and a series of coefficients for census regions
+$\gamma_{l}z_{l}$ that help structure the district-level effects which
+varying intercepts capture congressional district deviations from the
+overall state-specific average. The hierarchical standard deviations,
+$\sigma_{\alpha_{sj,k}}$ are sampled from a moderately regularizing
+hyperprior from an exponential distribution such that
+$\sigma_{\alpha_{sj,k}} \sim \mathrm{Exponential(\lambda)}$ where
+$\lambda = 1.5$.[^4]
+:::
+
+[^4]: This implies a non-centered parameterization for the random
+    effects which aids in the convergence of more complex hierarchical
+    models [@McElreath2020, 446-471].
+
+$$
+\begin{aligned}
+  \begin{bmatrix}
+  \,\alpha_{s}\,\\
+  \,\beta_{1s}\,
+  \end{bmatrix} \sim \mathcal{MVN}
+  \begin{bmatrix}
+  \begin{pmatrix}
+  \mu_{\alpha}\\
+  \mu_{\beta_{1}}
+  \end{pmatrix},
+  \,\Sigma_{s}
+  \end{bmatrix}
+\end{aligned}
+$$ {#eq-state-level}
+
+::: a
+Finally, equation @eq-state-level represents the state level effects.
+The state-specific intercepts $\alpha_{s}$ and varying coefficient for
+time $\beta_{1s,k}$ are assumed to follow a multivariate normal
+distribution whose mean is a function of the baseline relative log odds
+of each category $k$ and survey wave specific deviations from the
+baseline across states. The covariance matrix $\Sigma$ can be decomposed
+into a correlation matrix $\Omega$ and a vector of scales $\tau$ and
+reparameterized as the result of a Cholesky factorization such that
+$\Sigma = \mathrm{Diag}(\tau) \,\Omega\, \mathrm{Diag}(\tau)$ as shown
+in equation @eq-state-covariances below [@Gelman2014a, 367-378].
+:::
+
+$$
+\begin{aligned}
+  \tau_{s} = \begin{bmatrix}
+  \sigma_{\alpha_{s}}\, & \\
+  & \sigma_{\beta_{1s}}
+  \end{bmatrix} & \quad \text{and} \quad \Omega_{s} = 
+  \begin{bmatrix}
+   & \rho_{\alpha_{s}\beta_{1s}}\\
+   \rho_{\beta_{1s}\alpha_{s}} &
+  \end{bmatrix}
+\end{aligned}
+$$ {#eq-state-covariances}
+
+::: a
+The correlation matrix $\Omega$ is then assigned a multivariate prior
+from an LKJ distribution of the form $\Omega \sim \mathcal{LKJ}(\xi)$
+where $\xi = 5$, placing moderate constraints on the correlation between
+the state-level time slopes and intercepts [@Lewandowski2009]. For the
+vector of scales $\tau$, I assign a moderately regularizing exponential
+prior with $\lambda = 1$, allowing for slightly larger differences
+between states compared to congressional districts within states.
+:::
+
+$$
+\begin{aligned}
+  \operatorname{lfate}_{i}  &\sim N \left(\mu, \sigma^2 \right) \\
+    \mu &=\alpha_{j[i],k[i]} + \beta_{1k[i]}(\operatorname{time}) + \beta_{2}(\operatorname{in\_district}) + \beta_{3}(\operatorname{avg\_hrs})\ + \\
+&\quad \beta_{4}(\operatorname{\log\_km\_from\_center\_mean}) + \beta_{5}(\operatorname{race}_{\operatorname{1}}) + \beta_{6}(\operatorname{race}_{\operatorname{2}}) + \beta_{7}(\operatorname{female}_{\operatorname{1}})\ + \\
+&\quad \beta_{8}(\operatorname{educ}_{\operatorname{Some\ College}}) + \beta_{9}(\operatorname{educ}_{\operatorname{Bachelor's\ Degree\ or\ Higher}}) + \beta_{10}(\operatorname{age\_sc}) + \beta_{11}(\operatorname{party})\ + \\
+&\quad \beta_{12}(\operatorname{income}) + \beta_{13}(\operatorname{\log\_km\_from\_center\_mean} \times \operatorname{time}) \\    \alpha_{j}  &\sim N \left(\gamma_{0}^{\alpha} + \gamma_{1}^{\alpha}(\operatorname{region}_{\operatorname{2}}) + \gamma_{2}^{\alpha}(\operatorname{region}_{\operatorname{3}}) + \gamma_{3}^{\alpha}(\operatorname{region}_{\operatorname{4}}), \sigma^2_{\alpha_{j}} \right)
+    \text{, for state:district j = 1,} \dots \text{,J} \\    
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &\alpha_{k} \\
+      &\beta_{1k}
+    \end{aligned}
+  \end{array}
+\right)
+  &\sim N \left(
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &\mu_{\alpha_{k}} \\
+      &\mu_{\beta_{1k}}
+    \end{aligned}
+  \end{array}
+\right)
+, 
+\left(
+  \begin{array}{cc}
+     \sigma^2_{\alpha_{k}} & \rho_{\alpha_{k}\beta_{1k}} \\ 
+     \rho_{\beta_{1k}\alpha_{k}} & \sigma^2_{\beta_{1k}}
+  \end{array}
+\right)
+ \right)
+    \text{, for state k = 1,} \dots \text{,K}
+\end{aligned}
+$$
+
+I estimate the model via the probabilistic programming language Stan
+(relying on the CmdStanR interface, a lightweight alternative to brms)
+which implements the No-U-Turn sampler variant of Hamiltonian Markov
+Chain Monte Carlo [@Carpenter2017; @Hoffman2014]. I run six Markov
+chains in parallel for 5,000 iterations each. The first 3,000 iterations
+for each chain are discarded after the initial warm-up adaptation stage
+leaving us with 12,000 posterior samples for subsequent analysis [^5].
+Posterior predictive checks (Appendix 2: Figure 3) indicate that this
+model predicts a distribution that is very close to that of the sample
+data [@Gelman2014a; @Gelman2007].
+
+[^5]: Estimation is performed under R version 4.2.1 using the brms
+    package (Bürkner 2017, 2018; R Core Team 2021), which serves as a
+    front-end for regression models using Stan's implementation of
+    Hamiltonian Markov Chain MonteCarlo.
+
+# Results
+
+The results of this analysis indicate that change in proximity to EPA
+Superfund locations does indeed impact levels of linked fate. Figure 4
+shows the change in probability for each of the potential outcomes when
+jointly manipulating both *time* and *proximity*; more plainly, the
+change in probability of each response if every respondent increased x
+units in *proximity* between 2016 and 2020. Importantly, Figure 4
+presents Bayesian credible intervals which are predictions of the
+expected population distribution rather than confidence intervals which
+estimate a feasible range for the parameter. Recall, *proximity* is
+modeled as the logged mean distance to all Superfund sites in a given
+state. As we can see in Figure 4, as the *proximity* term increases
+respondents are less likely to respond "Not a lot" to the linked fate
+question and more likely to respond "A lot". So, as respondents get
+farther away on average from cleanup sites their level of linked fate
+increases.
+
+![](images/ame_plot_mod_3.jpg)
+
+I interpret this to mean that being near visible signs of the government
+intervening to cleanup dangerous materials may be a similar mechanism to
+institutionalized racism, in that the actions of the government (EPA
+clean up, police misconduct, etc) send a signal to marginalized groups
+of their value to that entity and either reinforce or counteract those
+groups understandings of their relative positionality in the political
+culture of that area. If the government acts to protects a marginalized
+group in the same way that they would have protected a more privileged
+group, marginalized people will have less reason to believe that
+racialized systems of inequality have impacted them due to their group
+identity.
+
+# Conclusion
+
+This analysis attempts to bridge the bodies of literature surrounding
+climate politics and minority political behavior. I argue that because
+structural inequality is so tightly linked to the impacts of
+environmental degradation, environmental degradation should have an
+impact on the political behavior of racially and ethnically marginalized
+groups. As environmental degradation makes climate politics a more
+impactful facet of human life, perceptions of group positionality and
+systemic environmental inequality will incentivize marginalized groups
+in affected areas to identify more strongly with their ethnic or racial
+identity and thus report a higher level of linked fate. Just as social
+identity influences environmental attitudes, so too should climate
+change influence identity and group consciousness. I find that over
+time, respondents who live closer to EPA Superfund cleanup sites have
+lower levels of linked fate, indicating that government aid in
+mitigating the impacts of environmental racism are likely to positively
+impact the way that minority groups view their relationship with the
+government and broader society. This research is limited in a few ways.
+Most notably, the measure that I use for proximity to EPA Superfund
+sites is flawed in that the ANES does not geocode their responses. As
+such, the closest estimate that I am able to use for the locations of
+each respondent relies on their legislative district. While center
+points of legislative districts allows for some variation in the
+proximity measure, ideally, I would be using the exact location, or
+something closer to city or county level geocoding. Secondly, this time
+series only utilizes 2 waves of the ANES. I would prefer to have a
+longer time series, however the linked fate question on the ANES has
+only been asked two times. The only alternative large scale political
+survey which might be a better alternative is the Collaborative
+Multiracial Post-Election Survey. While the CMPS is infinitely
+preferable to the ANES in terms of sample size (the CMPS oversamples
+Black, Asian, and Hispanic respondents and thus has an N 3x the size of
+the ANES for the linked fate question, which is only asked to those
+groups), the linked fate question changed significantly between the 2016
+and 2020 waves, and as such is not comparable. So, for now, the two
+waves of the ANES is the better option of the two. Despite these
+limitations, these results are promising for scholars of climate
+politics and of racial and ethnic dynamics in the United States. The
+analysis is evidence that while marginalization and climate politics are
+intertwined, efforts on behalf of the government can mitigate the
+adverse effects of human centered changes to local ecosystems.
+
+# References

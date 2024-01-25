@@ -1,0 +1,144 @@
+---
+title: "Model Overview"
+date: '`r format(Sys.time(), "%A, %B %d %Y")`'
+author: "A. Jordan Nafa"
+format: 
+  html:
+    toc: false
+    css: "assets/page-style.css"
+    theme: journal
+    highlight-style: monokai
+    self-contained: true
+    citations-hover: true
+    code-link: true
+    linkcolor: "#00853E"
+    code-block-bg: "#272822"
+bibliography: "assets/references.bib"
+csl: "assets/apsa.csl"
+link-citations: yes
+crossref: 
+  eq-prefix: ""
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  cache = TRUE,
+  warning = FALSE,
+  eval = FALSE,
+  comment = ' ',
+  fig.path = 'figs/',
+  fig.align = "center",
+  cache.path = '_cache/',
+  fig.process = function(x) {
+    x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
+    if (file.rename(x, x2))
+      x2
+    else
+      x
+  }
+)
+```
+
+# Model
+
+To evaluate the theoretical expectations outlined in the preceding section, I
+estimate a series of Bayesian hierarchical categorical logit models. In the
+context of the observed data in which respondents $i \in \{1,2,\dots,N\}$ are
+nested within congressional districts $j \in \{1,2,\dots,J\}$ which are in turn
+nested within states $s \in \{1,2,\dots,S\}$, the model can be expressed as a
+set of equations representing each level.
+
+$$
+\begin{align}\
+y_{ijs} &\sim \mathrm{Categorical}(\theta_{k})\\
+\mathrm{logit}(\theta_{k}) &= \alpha_{js,k} + \beta_{1s,k}\mathrm{Time}_{k} + \beta_{2,k}x_{2,k} + \dots + \beta_{l,k}x_{l,k}\
+\end{align}
+$$ {#eq-population-level}
+
+::: a
+Equation @eq-population-level represents the population-level effects, where the
+relative probability of the response $\theta_{k}$ for each category
+$k \in \{1,\dots,K\}$ is a function of a global intercept $\alpha$, a set of $L$
+fixed coefficients $\beta_{l}$ which capture respondent-level demographic
+characteristics, a dichotomous indicator for survey wave that takes value of 0
+for the 2016 ANES wave and 1 for the 2020 wave, and an interaction between time
+and average log proximity to an EPA Superfund site from the center point of a
+respondent's congressional district. The varying intercepts, denoted
+$\alpha_{j,k}$ and $\alpha_{s,k}$ capture congressional district and state
+specific deviations from the global average for the $k^{th}$ category
+respectively.
+:::
+
+$$
+\begin{aligned}
+\alpha_{j[s],k} &\sim \mathcal{MVN}(\gamma_{10} + \gamma_{11}z_{11} + \dots + \gamma_{14}z_{14}, ~ \sigma_{\alpha_{j[s],k}})\\
+\end{aligned}
+$$ {#eq-district-level}
+
+::: a
+At the congressional district level shown in equation @eq-district-level, the
+district-by-state intercepts for each category $k$ follow a multivariate normal
+distribution whose mean is a linear combination of the overall average within
+congressional districts $\gamma_{10}$ and a series of coefficients for census
+regions $\gamma_{l}z_{l}$ that help structure the district-level effects which
+varying intercepts capture congressional district deviations from the overall
+state-specific average. The hierarchical standard deviations,
+$\sigma_{\alpha_{sj,k}}$ are sampled from a moderately regularizing hyperprior 
+from an exponential distribution such that 
+$\sigma_{\alpha_{sj,k}} \sim \mathrm{Exponential(\lambda)}$ where $\lambda = 1.5$.[^1]
+:::
+
+[^1]: This implies a non-centered parameterization for the random effects
+    which aids in the convergence of more complex hierarchical models
+    [@McElreath2020, 446-471].
+
+$$
+\begin{aligned}
+  \begin{bmatrix}
+  \,\alpha_{s}\,\\
+  \,\beta_{1s}\,
+  \end{bmatrix} \sim \mathcal{MVN}
+  \begin{bmatrix}
+  \begin{pmatrix}
+  \mu_{\alpha}\\
+  \mu_{\beta_{1}}
+  \end{pmatrix},
+  \,\Sigma_{s}
+  \end{bmatrix}
+\end{aligned}
+$$ {#eq-state-level}
+
+::: a
+Finally, equation @eq-state-level represents the state level effects. The 
+state-specific intercepts $\alpha_{s}$ and varying coefficient for time 
+$\beta_{1s,k}$ are assumed to follow a multivariate normal distribution whose 
+mean is a function of the baseline relative log odds of each category $k$ and 
+survey wave specific deviations from the baseline across states. The covariance 
+matrix $\Sigma$ can be decomposed into a correlation matrix $\Omega$ and a 
+vector of scales $\tau$ and reparameterized as the result of a Cholesky 
+factorization such that $\Sigma = \mathrm{Diag}(\tau) \,\Omega\, \mathrm{Diag}(\tau)$ 
+as shown in equation @eq-state-covariances below [@Gelman2014a, 367-378].
+:::
+
+$$
+\begin{aligned}
+  \tau_{s} = \begin{bmatrix}
+  \sigma_{\alpha_{s}}\, & \\
+  & \sigma_{\beta_{1s}}
+  \end{bmatrix} & \quad \text{and} \quad \Omega_{s} = 
+  \begin{bmatrix}
+   & \rho_{\alpha_{s}\beta_{1s}}\\
+   \rho_{\beta_{1s}\alpha_{s}} &
+  \end{bmatrix}
+\end{aligned}
+$$ {#eq-state-covariances}
+
+::: a
+The correlation matrix $\Omega$ is then assigned a multivariate prior from an
+LKJ distribution of the form $\Omega \sim \mathcal{LKJ}(\xi)$ where $\xi = 5$,
+placing moderate constraints on the correlation between the state-level time
+slopes and intercepts [@Lewandowski2009]. For the vector of scales $\tau$, I
+assign a moderately regularizing exponential prior with $\lambda = 1$, 
+allowing for slightly larger differences between states compared to 
+congressional districts within states.
+:::
