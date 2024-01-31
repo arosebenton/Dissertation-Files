@@ -1,6 +1,6 @@
-#--------------------------------Chapter 3 data built---------------------------
-#-Author: A. Rose Benton---------------------------Created: September, 26, 2022-#
-#-R Version: 4.1.3---------------------------------Revised:  March, 5, 2023-#
+#--------------------------------Chapter 3 data build---------------------------
+#-Author: A. Rose Benton---------------------------Created: November, 15, 2023-#
+#-R Version: 4.1.3---------------------------------Revised:  January, 15, 2024-#
 
 
 #this project is still in process, at the moment this file serves more as a list of the 
@@ -12,10 +12,12 @@ pacman::p_load("tidyverse",
                "tidync", #nc files
                "viridis", #color pallette
                "geojsonio", #geojson files
-               "geojsonsf",
-               "sf")
+               "geojsonsf",  #geojson sf converter
+               "sf",  #special features files
+               "raster" #raster, .nc, .tif files
+               )
 
-#--------------------------------------Aid_date--------------------------------
+#--------------------------------------Aid_data--------------------------------
 
 aid_raw <- read.csv("data/Chapter 3/ch3_aiddata_germany/germany_aiddata_raw.csv")
 
@@ -96,3 +98,43 @@ aid_tcl <- left_join(aid_3, tcloss, by = "region")
 #-------------------------------water quality-----------------------------------
 
 wq <- read_csv("data/Chapter 3/waterquality.csv")
+
+#-------------------------------total organic carbon----------------------------
+
+toc <- read_csv("data/Chapter 3/toc/c_annual.csv")
+
+#------------------------------soil degredation--------------------------------
+
+soil <- raster("data/Chapter 3/De_Rosa.et.al2023.g_C_kg_y.tif")
+
+extracted_values <- extract(soil, ger_geo, fun = mean, na.rm = TRUE)
+
+soil_change <- as.data.frame(ger_geo$shapeName)
+
+soil_change$mean_value <- extracted_values
+
+#------------------------------tropospheric ozone--------------------------------
+#### this doesnt work yet
+
+
+# Set the directory where your monthly .nc files are located
+nc_files_directory <- "data/Chapter 3/trop_03"
+
+# List all .nc files in the directory
+nc_files <- list.files(path = nc_files_directory, pattern = "\\.nc$", full.names = TRUE)
+
+# Create an empty list to store data frames
+df_list <- list()
+
+# Loop through each .nc file, read it, and convert it to a data frame
+for (file in nc_files) {
+  raster_data <- raster(file)
+  raster_df <- as.data.frame(raster_data, xy = TRUE)
+  
+  # Add a column for the file name or any other identifier
+  raster_df$file_name <- basename(file)
+  
+  df_list[[length(df_list) + 1]] <- raster_df
+}
+
+combined_df <- bind_rows(df_list)
