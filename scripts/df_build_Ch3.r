@@ -3,11 +3,6 @@
 #-R Version: 4.1.3---------------------------------Revised:  February, 7 2024-#
 
 
-#this project is still in process, at the moment this file serves more as a list of the
-#data I have gotten access to and what form it is in than a functional script, Eventually
-#this will include all of the environmental measures at a regional level merged in with
-#donnellys linked fate data (see class maps or data/chapter3/donnelly for more detail)
-
 pacman::p_load(
   "tidyverse",
   "tidync",
@@ -179,7 +174,7 @@ full_df <- left_join(aid_6, soil_region, by = "region") %>%
 
 #
 # #------------------------------tropospheric ozone--------------------------------
-# #### this doesnt work yet, cut for immediate deadline (texas comparative circle conferrence)
+# #### this doesnt work yet, cut for immediate deadline (texas comparative circle conference)
 # #### will be added back in for full dissertation
 #
 # nc_files_directory <- "data/Chapter 3/trop_03"
@@ -240,7 +235,7 @@ factors_3
 
 # Plot the biplot
 biplot_function(factor_scores_3, rownames(factor_scores_3))
-#-------------------------extract the factor results/ merge back in-----------#
+#-------------------------extract the factor results, plot-------------------#
 factor_scores_1 <- factor.scores(cor_data, factors_1)
 
 factor_scores_3 <- factor.scores(cor_data, factors_3)
@@ -249,16 +244,13 @@ factor_scores_1
 
 factor_scores_3
 
-# Extract the scores matrix
+#
 weights <- factor_scores_3$weights
 
-# Convert the weights matrix to a data frame
 weights_df <- as.data.frame(weights)
 
-# Add a column for variable names
 weights_df$variable <- rownames(weights)
 
-# Reshape the data frame from wide to long format
 weights_long <-
   pivot_longer(
     weights_df,
@@ -267,7 +259,7 @@ weights_long <-
     values_to = "value"
   )
 
-# Create heatmap using ggplot
+#heatmap
 ggplot(weights_long, aes(x = factor, y = variable, fill = value)) +
   geom_tile(color = "white") +
   labs(x = "Factor", y = "Variable", fill = "Loading") +
@@ -275,3 +267,25 @@ ggplot(weights_long, aes(x = factor, y = variable, fill = value)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   ggtitle("Heatmap of Factor Loadings")+
   scale_fill_viridis()
+
+
+
+#---------------------------Merge back into full_df, add survey data-----------
+
+scores_1 <- factor_scores_1$scores
+
+scores_3 <- factor_scores_3$scores
+
+temp_1 <- cbind(full_df, scores_1) %>% 
+  rename(factor1_1 = MR1)
+
+temp_2 <- cbind(temp_1, scores_3) %>% 
+  rename(factor2_1 = MR1,
+         factor2_2 = MR2,
+         factor2_3 = MR3)
+
+donnelly <- read_csv("data/Chapter 3/donnelly/gerreplication.csv")
+
+final_df <- left_join(donnelly, temp_2, by = ("region"))
+
+write_csv(final_df, "data/Chapter 3/final_df.csv")
