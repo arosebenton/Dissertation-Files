@@ -207,7 +207,7 @@ full_df <- left_join(aid_6, soil_region, by = "region") %>%
 
 #------------------------------coosing n factors------------------------------#
 #remove id variable  - errors from non-numeric data
-cor_data <- full_df %>% dplyr::select(-region,-tot_ch3)
+cor_data <- full_df %>% dplyr::select(-region, -tot_ch3)
 
 #cor matrix
 cor(cor_data, method = "pearson", use = "pairwise.complete.obs")
@@ -263,12 +263,16 @@ weights_long <-
 ggplot(weights_long, aes(x = factor, y = variable, fill = value)) +
   geom_tile(color = "white") +
   labs(x = "Factor", y = "Variable", fill = "Loading") +
+  scale_y_discrete(labels = c("Soil Change", 
+                              "Particulate Matter", 
+                              "CO2 Concentration",
+                              "NO2 Concentration",
+                              "Total Organic Carbon",
+                              "Tree Cover Loss"))+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  ggtitle("Heatmap of Factor Loadings")+
+  ggtitle("Heatmap of Factor Loadings") +
   scale_fill_viridis()
-
-
 
 #---------------------------Merge back into full_df, add survey data-----------
 
@@ -276,10 +280,10 @@ scores_1 <- factor_scores_1$scores
 
 scores_3 <- factor_scores_3$scores
 
-temp_1 <- cbind(full_df, scores_1) %>% 
+temp_1 <- cbind(full_df, scores_1) %>%
   rename(factor1_1 = MR1)
 
-temp_2 <- cbind(temp_1, scores_3) %>% 
+temp_2 <- cbind(temp_1, scores_3) %>%
   rename(factor2_1 = MR1,
          factor2_2 = MR2,
          factor2_3 = MR3)
