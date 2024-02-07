@@ -5,36 +5,19 @@
 
 pacman::p_load(
   "tidyverse",
-  "tidync",
-  #nc files
-  "viridis",
-  #color pallette
-  "geojsonio",
-  #geojson files
-  "geojsonsf",
-  #geojson sf converter
-  "sf",
-  #special features files
-  "raster",
-  #raster, .nc, .tif files
+  "tidync", #nc files
+  "viridis", #color pallette
+  "geojsonio", #geojson files
+  "geojsonsf", #geojson sf converter
+  "sf", 
+  #special features files 
+  "raster", #raster, .nc, .tif files
   "tidyverse",
-  "psych",
-  "GPArotation",
-  "gplots"
+  "psych", #factor analysis
+  "GPArotation" #factor analysis
 )
 
-weights <- factor_scores_3$weights
-
-# Create a heatmap of factor loadings
-heatmap.2(
-  weights,
-  dendrogram = "none",
-  scale = "row",
-  key = TRUE,
-  keysize = 1.0,
-  margins = c(5, 10),
-  main = "Heatmap of Factor Loadings"
-)#--------------------------------------Aid_data--------------------------------
+#--------------------------------------Aid_data--------------------------------
 
 aid_raw <-
   read.csv("data/Chapter 3/ch3_aiddata_germany/germany_aiddata_raw.csv")
