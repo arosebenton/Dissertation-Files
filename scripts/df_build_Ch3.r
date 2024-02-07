@@ -258,7 +258,6 @@ ggplot(weights_long, aes(x = factor, y = variable, fill = value)) +
   scale_fill_viridis()
 
 #---------------------------Merge back into full_df, add survey data-----------
-
 scores_1 <- factor_scores_1$scores
 
 scores_3 <- factor_scores_3$scores
@@ -271,7 +270,12 @@ temp_2 <- cbind(temp_1, scores_3) %>%
          factor2_2 = MR2,
          factor2_3 = MR3)
 
-donnelly <- read_csv("data/Chapter 3/donnelly/gerreplication.csv")
+donnelly <- read_csv("data/Chapter 3/donnelly/gerreplication.csv") %>% 
+  mutate(
+    region = (case_when(
+    region == "Baden-Wurttemberg" ~ "Baden-Württemberg",
+    region == "Mecklenburg-Western Pomerania" ~ "Mecklenburg-Vorpommern"
+  )))
 
 final_df <- left_join(donnelly, temp_2, by = ("region"))
 
