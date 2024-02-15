@@ -1,6 +1,6 @@
 #--------------------------------Chapter 3 analysis---------------------------
 #-Author: A. Rose Benton---------------------------Created:  February, 7 2024-#
-#-R Version: 4.3.1---------------------------------Revised:  February, 12 2024-#
+#-R Version: 4.3.1---------------------------------Revised:  February, 15 2024-#
 
 #install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
 
@@ -149,7 +149,7 @@ ame_1_plot <- ggplot(model_ames, aes(x = ame_1, fill = stat(x > 0))) +
     fill_type = "gradient",
     show.legend = FALSE
   )+
-  scale_x_continuous(limits = c(-.05, .075))+
+  scale_x_continuous(limits = c(-.1, .075))+
   labs(x = "Not at all")
 
 
@@ -160,7 +160,7 @@ ame_2_plot <- ggplot(model_ames, aes(x = ame_2, fill = stat(x > 0))) +
     fill_type = "gradient",
     show.legend = FALSE
   )+
-  scale_x_continuous(limits = c(-.05, .075))+
+  scale_x_continuous(limits = c(-.1, .075))+
   labs(x = "Not very much")
 
 
@@ -171,7 +171,7 @@ ame_3_plot <- ggplot(model_ames, aes(x = ame_3, fill = stat(x > 0))) +
     fill_type = "gradient",
     show.legend = FALSE
   )+
-  scale_x_continuous(limits = c(-.05, .075)) +
+  scale_x_continuous(limits = c(-.1, .075)) +
   labs(x = "Some")
 
 
@@ -182,13 +182,13 @@ ame_4_plot <- ggplot(model_ames, aes(x = ame_4, fill = stat(x > 0))) +
     fill_type = "gradient",
     show.legend = FALSE
   )+
-  scale_x_continuous(limits = c(-.05, .075))+
+  scale_x_continuous(limits = c(-.1, .075))+
   labs(x = "A lot")
 
 
 ame_plot <- ame_1_plot  + ame_2_plot + ame_3_plot + ame_4_plot +
   plot_layout(ncol = 1) +
-  plot_annotation(title = "Figure 1: Average Marginal Effects",
+  plot_annotation(title = "Figure 1: Posterior Predictions",
                   caption = "Plots represent the change in probabilty of linked-fate responses after manipulation
                   of environmental gedredation. Estimates represent 95% Bayesian credible intervals.") & 
   theme_bw(base_size = 10)
@@ -268,7 +268,7 @@ ame_4_yes_plot <- ggplot(model_ames_yes, aes(x = ame_4, fill = stat(x > 0))) +
 
 ame_plot_full_yes <- ame_1_yes_plot  + ame_2_yes_plot + ame_3_yes_plot + ame_4_yes_plot +
   plot_layout(ncol = 1)+
-  plot_annotation(title = "Figure 2: Average Marginal Effects for Union Members") & 
+  plot_annotation(title = "Figure 2: Posterior Predictions for Union Members") & 
   theme_bw(base_size = 10)
 
 ggsave(
@@ -328,7 +328,7 @@ ame_4_no_plot <- ggplot(model_ames_no, aes(x = ame_4, fill = stat(x > 0))) +
 
 ame_plot_full_no <- ame_1_no_plot  + ame_2_no_plot + ame_3_no_plot + ame_4_no_plot +
   plot_layout(ncol = 1)+
-  plot_annotation(title = "Figure 3: Average Marginal Effects for Non-Union Members") & 
+  plot_annotation(title = "Figure 3: Posterior Predictions for Non-Union Members") & 
   theme_bw(base_size = 10)
 
 ggsave(
